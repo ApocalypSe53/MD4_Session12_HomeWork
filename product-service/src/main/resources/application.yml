@@ -1,0 +1,40 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: product-service
+
+  datasource:
+    url: jdbc:h2:mem:productdb;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+    defer-datasource-initialization: true   # chạy data.sql sau khi Hibernate tạo bảng
+  sql:
+    init:
+      mode: always
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6380}
+      timeout: 2s
+
+  cache:
+    type: redis
+
+app:
+  cache:
+    product-ttl: 30m          # TTL cho cache "products"
+  db:
+    # Giả lập độ trễ của một truy vấn SQL thật (H2 in-memory quá nhanh để thấy khác biệt).
+    # Đặt 0ms để tắt.
+    simulated-latency: 200ms
+
+logging:
+  level:
+    com.rikkei.productservice: DEBUG

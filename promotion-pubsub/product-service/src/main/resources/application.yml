@@ -1,0 +1,29 @@
+server:
+  port: ${PORT:8096}
+
+spring:
+  application:
+    name: product-service
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5434}/shop
+    username: shop
+    password: shop
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6382}
+
+  cache:
+    type: redis
+
+app:
+  instance-id: ${INSTANCE_ID:product-${server.port}}
+  cache:
+    product-ttl: 30m
+    # Xóa lần 2 sau khoảng trễ này (delayed double delete) để dọn giá cũ do một request
+    # đọc DB trước khi commit nhưng ghi cache sau khi đã bị xóa lần 1. Đặt 0ms để tắt.
+    double-delete-delay: 500ms
+  pubsub:
+    channel: promotion-updates

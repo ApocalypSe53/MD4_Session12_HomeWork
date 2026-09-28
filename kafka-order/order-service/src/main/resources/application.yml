@@ -1,0 +1,31 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: order-service
+
+  datasource:
+    url: jdbc:h2:mem:orderdb;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all                                 # chờ broker ghi xong mới coi là gửi thành công
+      properties:
+        enable.idempotence: true                # retry không sinh bản ghi trùng
+        max.block.ms: 3000                      # Kafka sập: send() không treo request quá 3s
+        spring.json.add.type.headers: false     # không gắn tên class Java -> consumer tự định nghĩa DTO riêng
+
+app:
+  kafka:
+    topic:
+      order-events: order-events

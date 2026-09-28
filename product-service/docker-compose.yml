@@ -1,0 +1,8 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: product-redis
+    ports:
+      - "6380:6379"
+    # Chặn trần bộ nhớ + tự loại key có TTL cũ nhất khi đầy (phòng hờ ngoài TTL 30 phút).
+    command: ["redis-server", "--maxmemory", "256mb", "--maxmemory-policy", "volatile-lru"]

@@ -1,0 +1,31 @@
+server:
+  port: ${PORT:8091}
+
+spring:
+  application:
+    name: flash-sale
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/flashsale
+    username: flashsale
+    password: flashsale
+  jpa:
+    hibernate:
+      ddl-auto: update        # nhiều instance cùng khởi động -> không dùng create/drop
+    open-in-view: false
+
+  # Redisson starter đọc cấu hình kết nối từ đây
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6381}
+
+app:
+  instance-id: ${INSTANCE_ID:instance-${server.port}}
+  lock:
+    # Thời gian tối đa chờ giành khóa. Quá thời gian -> báo "hệ thống bận" thay vì treo request.
+    wait-time: 10s
+  flash-sale:
+    # Giả lập xử lý giữa bước "kiểm tra tồn kho" và "trừ kho" (tính khuyến mãi, gọi payment...).
+    # Chính khoảng trống này gây race condition khi không có khóa.
+    processing-delay: 20ms

@@ -1,0 +1,18 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: promo-redis
+    ports:
+      - "6382:6379"
+
+  postgres:
+    image: postgres:16
+    container_name: promo-postgres
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_DB: shop
+      POSTGRES_USER: shop
+      POSTGRES_PASSWORD: shop
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro

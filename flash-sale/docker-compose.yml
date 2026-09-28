@@ -1,0 +1,17 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: flash-sale-redis
+    ports:
+      - "6381:6379"
+
+  # DB dùng chung cho nhiều instance app -> mô phỏng đúng môi trường phân tán
+  postgres:
+    image: postgres:16
+    container_name: flash-sale-postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: flashsale
+      POSTGRES_USER: flashsale
+      POSTGRES_PASSWORD: flashsale
